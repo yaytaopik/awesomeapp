@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:awesomeapp/views/home.dart';
+import 'package:awesomeapp/views/picturelist.dart';
+import 'package:awesomeapp/provider/pictureprovider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  runApp(ChangeNotifierProvider(
+    create: (_) => PictureProvider(),
+    child: new MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Awesome App',
-      home: new SafeArea(child: Home()),
-    );
-  }
+      home: PictureListView(),
+    ),
+  ));
 }

@@ -9,11 +9,11 @@ class PictureModel {
   late final int perPage;
   late final List<Photos> photos;
   late final String nextPage;
-  
-  PictureModel.fromJson(Map<String, dynamic> json){
+
+  PictureModel.fromJson(Map<String, dynamic> json) {
     page = json['page'];
     perPage = json['per_page'];
-    photos = List.from(json['photos']).map((e)=>Photos.fromJson(e)).toList();
+    photos = List.from(json['photos']).map((e) => Photos.fromJson(e)).toList();
     nextPage = json['next_page'];
   }
 
@@ -21,7 +21,7 @@ class PictureModel {
     final _data = <String, dynamic>{};
     _data['page'] = page;
     _data['per_page'] = perPage;
-    _data['photos'] = photos.map((e)=>e.toJson()).toList();
+    _data['photos'] = photos.map((e) => e.toJson()).toList();
     _data['next_page'] = nextPage;
     return _data;
   }
@@ -52,8 +52,8 @@ class Photos {
   late final Src src;
   late final bool liked;
   late final String alt;
-  
-  Photos.fromJson(Map<String, dynamic> json){
+
+  Photos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     width = json['width'];
     height = json['height'];
@@ -63,6 +63,7 @@ class Photos {
     photographerId = json['photographer_id'];
     avgColor = json['avg_color'];
     src = Src.fromJson(json['src']);
+    // liked = json['liked'];
     liked = json['liked'];
     alt = json['alt'];
   }
@@ -103,8 +104,8 @@ class Src {
   late final String portrait;
   late final String landscape;
   late final String tiny;
-  
-  Src.fromJson(Map<String, dynamic> json){
+
+  Src.fromJson(Map<String, dynamic> json) {
     original = json['original'];
     large2x = json['large2x'];
     large = json['large'];
