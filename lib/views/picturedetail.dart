@@ -5,6 +5,7 @@ import 'package:photo_view/photo_view.dart';
 class PhotoDetails extends StatefulWidget {
   final String url;
   final String tag;
+
   const PhotoDetails({Key? key, required this.tag, required this.url})
       : super(key: key);
 
@@ -13,6 +14,24 @@ class PhotoDetails extends StatefulWidget {
 }
 
 class _PhotoDetailsState extends State<PhotoDetails> {
+  late PhotoViewScaleStateController scaleStateController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scaleStateController = PhotoViewScaleStateController();
+  }
+
+  void dispose() {
+    scaleStateController.dispose();
+    super.dispose();
+  }
+
+  void goBack() {
+    scaleStateController.scaleState = PhotoViewScaleState.originalSize;
+  }
+
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -37,17 +56,62 @@ class _PhotoDetailsState extends State<PhotoDetails> {
             ),
           ),
           Hero(
-              transitionOnUserGestures: true,
-              tag: widget.tag,
-              child: Container(
-                color: Colors.transparent,
-                height: h,
-                width: w,
-                child: PhotoView(
-                    initialScale: 1.0,
-                    tightMode: true,
-                    imageProvider: NetworkImage(widget.url)),
-              ))
+            transitionOnUserGestures: true,
+            tag: widget.tag,
+            child: Container(
+              color: Colors.transparent,
+              height: h,
+              width: w,
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text('Kembali'),
+                ),
+                body: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Container(
+                      child: PhotoView(
+                          imageProvider: NetworkImage(widget.url),
+                          initialScale: 1.0),
+                    ),
+                    Positioned(
+                        width: w / 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.3),
+                          ),
+                          child: Wrap(
+                            children: [
+                              Row(
+                                children: [
+                                  Text('Tag:',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    widget.tag,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                widget.url,
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ],
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );

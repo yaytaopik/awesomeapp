@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:ui' as ui;
-
+import 'package:flutter/services.dart';
 import 'package:awesomeapp/provider/pictureprovider.dart';
 import 'package:awesomeapp/views/picturedetail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:simple_connection_checker/simple_connection_checker.dart';
 
 class PictureListView extends StatefulWidget {
   const PictureListView({Key? key}) : super(key: key);
@@ -15,6 +18,10 @@ class PictureListView extends StatefulWidget {
 
 class _PictureListViewState extends State<PictureListView> {
   bool isGrid = true;
+  bool? isConnected;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   final ScrollController _controller = ScrollController();
   fetchData() {
     Provider.of<PictureProvider>(context, listen: false).callPhotoApi();
@@ -25,6 +32,7 @@ class _PictureListViewState extends State<PictureListView> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       fetchData();
     });
+
     // TODO: implement initState
     super.initState();
     _controller.addListener(_scrollListener);
@@ -33,6 +41,36 @@ class _PictureListViewState extends State<PictureListView> {
   void _scrollListener() {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
       fetchData();
+    }
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_UpdateConnectionState);
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print("Error Occurred: ${e.toString()} ");
+      return;
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+    return _UpdateConnectionState(result);
+  }
+
+  Future<void> _UpdateConnectionState(ConnectivityResult result) async {
+    if (result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.wifi) {
+    setState(() {
+      isConnected == true;
+    });
+    } else {
+     setState(() {
+       isConnected == false;
+     });
     }
   }
 
@@ -64,12 +102,7 @@ class _PictureListViewState extends State<PictureListView> {
                           });
                         },
                         icon: FaIcon(FontAwesomeIcons.thLarge))
-                // new IconButton(
-                //   icon: FaIcon(FontAwesomeIcons.thList),
-                //   onPressed: () {},
-                // ),
               ],
-              // title: Text("Awesome app"),
               expandedHeight: 220.0,
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: false,
@@ -196,9 +229,11 @@ class _PictureListViewState extends State<PictureListView> {
               child: Hero(
                 transitionOnUserGestures: true,
                 tag: data.photos[index].id.toString(),
-                child: Image.network(
-                  data.photos[index].src.medium.toString(),
-                  fit: BoxFit.cover,
+                child: Container(
+                  child: Image.network(
+                    data.photos[index].src.medium.toString(),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -208,41 +243,37 @@ class _PictureListViewState extends State<PictureListView> {
 
   Widget body(data) {
     double h = MediaQuery.of(context).size.height;
-
-    return Container(
-      color: Colors.transparent,
-      child: ListView.builder(
-          controller: _controller,
-          itemCount: data.photos.length,
-          itemBuilder: (context, index) {
-            if (index == data.photos.length - 1) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => PhotoDetails(
-                            tag: data.photos[index].id.toString(),
-                            url: data.photos[index].src.large2x.toString())));
-              },
-              child: Container(
-                height: h / 2,
-                margin: EdgeInsets.all(h / 18),
-                child: Hero(
-                  transitionOnUserGestures: true,
-                  tag: data.photos[index].id.toString(),
-                  child: Image.network(
-                    data.photos[index].src.medium.toString(),
-                    fit: BoxFit.cover,
-                  ),
+    return ListView.builder(
+        controller: _controller,
+        itemCount: data.photos.length,
+        itemBuilder: (context, index) {
+          if (index == data.photos.length - 1) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => PhotoDetails(
+                          tag: data.photos[index].id.toString(),
+                          url: data.photos[index].src.large2x.toString())));
+            },
+            child: Container(
+              height: h / 2,
+              margin: EdgeInsets.all(h / 18),
+              child: Hero(
+                transitionOnUserGestures: true,
+                tag: data.photos[index].id.toString(),
+                child: Image.network(
+                  data.photos[index].src.medium.toString(),
+                  fit: BoxFit.cover,
                 ),
               ),
-            );
-          }),
-    );
+            ),
+          );
+        });
   }
 }
