@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class PictureProvider extends ChangeNotifier {
   int _page = 1;
-  String _search = 'nature';
+  String _search = 'color';
   
   String get search => _search;
 
@@ -37,7 +37,16 @@ class PictureProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchPhotoApi() async {
+    notifyListeners();
+  }
+
   void addPhotosToList(List<Photos> photoData) {
+    _photos.addAll(photoData);
+    notifyListeners();
+  }
+
+  void addAllPhotos(List<Photos> photoData) {
     _photos.addAll(photoData);
     notifyListeners();
   }

@@ -58,6 +58,7 @@ class _PictureListViewState extends State<PictureListView> {
                   centerTitle: true,
                   title: Text('Awesome app',
                       style: TextStyle(
+                        fontFamily: 'JosefinSans',
                         color: Colors.white,
                         fontSize: 16.0,
                       )),
@@ -236,7 +237,7 @@ class _PictureListViewState extends State<PictureListView> {
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               height: h / 20,
               margin: EdgeInsets.all(h / 50),
-              child: Hero(
+              child: Hero( 
                 transitionOnUserGestures: true,
                 tag: data.photos[index].id.toString(),
                 child: Image.network(

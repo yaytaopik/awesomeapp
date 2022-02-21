@@ -8,6 +8,8 @@ void main() {
     create: (_) => PictureProvider(),
     child: new MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'awesome app',
+      theme: ThemeData(fontFamily: 'Montserrat'),
       home: PictureListView(),
     ),
   ));
