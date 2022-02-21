@@ -49,10 +49,25 @@ class _PictureListViewState extends State<PictureListView> {
               floating: false,
               snap: false,
               actions: <Widget>[
-                new IconButton(
-                  icon: FaIcon(FontAwesomeIcons.thList), 
-                  onPressed: () {},
-                ),
+                isGrid
+                    ? new IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isGrid = false;
+                          });
+                        },
+                        icon: FaIcon(FontAwesomeIcons.thList))
+                    : new IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isGrid = true;
+                          });
+                        },
+                        icon: FaIcon(FontAwesomeIcons.thLarge))
+                // new IconButton(
+                //   icon: FaIcon(FontAwesomeIcons.thList),
+                //   onPressed: () {},
+                // ),
               ],
               // title: Text("Awesome app"),
               expandedHeight: 220.0,
