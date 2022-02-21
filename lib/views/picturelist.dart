@@ -4,6 +4,7 @@ import 'package:awesomeapp/provider/pictureprovider.dart';
 import 'package:awesomeapp/views/picturedetail.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PictureListView extends StatefulWidget {
   const PictureListView({Key? key}) : super(key: key);
@@ -47,21 +48,26 @@ class _PictureListViewState extends State<PictureListView> {
               pinned: true,
               floating: false,
               snap: false,
+              actions: <Widget>[
+                new IconButton(
+                  icon: FaIcon(FontAwesomeIcons.thList), 
+                  onPressed: () {},
+                ),
+              ],
               // title: Text("Awesome app"),
               expandedHeight: 220.0,
-              leading: IconButton(
-                  icon: Icon(Icons.format_list_bulleted),
-                  onPressed: () {
-                    // Do something
-                  }),
               flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Text('Awesome app',
-                      style: TextStyle(
-                        fontFamily: 'JosefinSans',
-                        color: Colors.white,
-                        fontSize: 16.0,
-                      )),
+                  centerTitle: false,
+                  titlePadding:
+                      EdgeInsets.symmetric(vertical: 17, horizontal: 10),
+                  title: Text(
+                    'Awesome app',
+                    style: TextStyle(
+                      fontFamily: 'JosefinSans',
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
                   background: Image.network(
                     'https://images.pexels.com/photos/8850944/pexels-photo-8850944.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
                     fit: BoxFit.cover,
@@ -140,71 +146,6 @@ class _PictureListViewState extends State<PictureListView> {
           ],
         ),
       ),
-      // body: Stack(
-      //   fit: StackFit.expand,
-      //   children: [
-      //     Container(
-      //       height: h,
-      //       color: Colors.transparent,
-      //       child: FlutterLogo(),
-      //     ),
-      //     Container(
-      //       height: MediaQuery.of(context).size.height,
-      //       child: BackdropFilter(
-      //         child: Container(
-      //           height: h,
-      //           color: Colors.grey.shade200.withOpacity(0.5),
-      //         ),
-      //         filter: ui.ImageFilter.blur(sigmaX: 18.0, sigmaY: 18.0),
-      //       ),
-      //     ),
-      //     OrientationBuilder(
-      //       builder: (context, orientation) {
-      //         return Consumer<PictureProvider>(
-      //           builder: (context, data, __) {
-      //             if (data != null ||
-      //                 data.photos != null ||
-      //                 data.photos.length != 0) {
-      //               if (orientation == Orientation.portrait) {
-      //                 return body(data);
-      //               } else {
-      //                 return Row(
-      //                   children: [
-      //                     Expanded(flex: 5, child: body(data)),
-      //                     Expanded(
-      //                         flex: 5,
-      //                         child: Center(
-      //                           child: Container(
-      //                             child: Column(
-      //                               children: [
-      //                                 Text('Awesome App'),
-      //                                 Text(
-      //                                   'Developed by Yayang Taopik',
-      //                                   style: TextStyle(
-      //                                       fontWeight: FontWeight.bold,
-      //                                       fontSize: 18),
-      //                                 ),
-      //                               ],
-      //                               mainAxisAlignment: MainAxisAlignment.center,
-      //                               crossAxisAlignment:
-      //                                   CrossAxisAlignment.center,
-      //                             ),
-      //                           ),
-      //                         ))
-      //                   ],
-      //                 );
-      //               }
-      //             } else {
-      //               return Center(
-      //                 child: CircularProgressIndicator(),
-      //               );
-      //             }
-      //           },
-      //         );
-      //       },
-      //     ),
-      //   ],
-      // ),
     );
   }
 
@@ -237,7 +178,7 @@ class _PictureListViewState extends State<PictureListView> {
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               height: h / 20,
               margin: EdgeInsets.all(h / 50),
-              child: Hero( 
+              child: Hero(
                 transitionOnUserGestures: true,
                 tag: data.photos[index].id.toString(),
                 child: Image.network(
